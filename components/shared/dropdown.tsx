@@ -48,6 +48,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
   const [deleteC, setDeleteC] = useState(false)
   const [toDelete, setToDelete] = useState('')
   const [toDeleteName, setToDeleteName] = useState('')
+  const [max, setMax] = useState(false)
 
   const handleAddCategory = async () => {
     const getCategories = async () => {
@@ -60,6 +61,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
     const user = await getUserByClerkId(userId)
     setUsername(user.username)
     if(await getCategories() >= 10) {
+      setMax(true)
       return
     }
     if(categories.some(category => category.name === newCategory)) {
@@ -182,6 +184,19 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel className={buttonVariants({ variant: "coral" })} onClick={() => { setAlreadyExist(!AlreadyExist) }}>Ok</AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        <AlertDialog open={max}>
+          <AlertDialogContent className="bg-white">
+            <AlertDialogHeader>
+              <AlertDialogTitle>You have the Max of 10 Categories.</AlertDialogTitle>
+              <AlertDialogDescription>
+                Please delete a category to add a new one. Deleted catagories can be searched but not used on new events.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className={buttonVariants({ variant: "coral" })} onClick={() => { setMax(false) }}>Ok</AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
