@@ -33,11 +33,26 @@ export const getAllCategories = async (userId: string) => {
 export const getACategory = async (category: string) => {
   try {
     await connectToDatabase();
-
-    const categories = await Category.findByIdAndDelete(category);
+   
+    const categories = await Category.findByIdAndUpdate(category, {creator: 'DELETED'});
 
 
     return
+  } catch (error) {
+    handleError(error)
+  }
+}
+export const getbyID = async (category: string) => {
+  try {
+    await connectToDatabase();
+   
+    const categories = await Category.findById(category);
+    const name = categories?.name
+
+    
+
+
+    return JSON.parse(JSON.stringify(name))
   } catch (error) {
     handleError(error)
   }
