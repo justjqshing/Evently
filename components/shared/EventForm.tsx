@@ -63,13 +63,13 @@ const EventForm = ({ userId, type}: EventFormProps) => {
   return (
     <Form {...form}>
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-      <div className="flex flex-col md:flex-row gap-5">
+      <div className="flex flex-col md:flex-row gap-5 space-between">
         <FormField
           control={form.control}
           name="title"
           render={({ field }) => (
-            <FormItem className='w-full'>
-              <FormControl className="input-field">
+            <FormItem className="flex flex-1">
+              <FormControl className="title-field">
                 <Input placeholder="Event title" {...field} />
                 
               </FormControl>
@@ -81,7 +81,7 @@ const EventForm = ({ userId, type}: EventFormProps) => {
           control={form.control}
           name="categoryId"
           render={({ field }) => (
-            <FormItem className="max-w-[25%]">
+            <FormItem className="flex min-w-[200px]">
               <FormControl>
                 <Dropdown onChangeHandler={field.onChange} value={field.value} userId={userId}></Dropdown>
               </FormControl>
