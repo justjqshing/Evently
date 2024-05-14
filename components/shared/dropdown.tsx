@@ -27,6 +27,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import Image from "next/image"
 
 
+
 type DropdownProps = {
   value?: string
   onChangeHandler?: () => void
@@ -45,6 +46,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
   const [username, setUsername] = useState('')
   const [confirm, setConfirm] = useState(false)
   const [deleteC, setDeleteC] = useState(false)
+  const [toDelete, setToDelete] = useState('')
 
   const handleAddCategory = async () => {
     
@@ -95,7 +97,11 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
 
     getCategories();
   }, [])
+  const Confirm = async (category: string) => {
+    setConfirm(true)
+    setToDelete(category)
 
+  }
   return (
     <>
     <Select onValueChange={onChangeHandler} defaultValue={value}>
@@ -108,11 +114,12 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
             <SelectItem key={category._id} value={category._id} className="select-item p-regular-14">
               {category.name}
             </SelectItem>
-            <Image src='/assets/icons/trash.svg' width={30} height={20} alt='delete' onClick={() => setConfirm(true)} className=" text-primary-500 hover:bg-primary-50 focus:text-primary-500 px-2 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50" />
+            <Image src='/assets/icons/trash.svg' width={30} height={20} alt='delete' onClick={() => Confirm(category.name)} className=" text-primary-500 hover:bg-primary-50 focus:text-primary-500 px-2 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50" />
             <AlertDialog open={confirm}>
             <AlertDialogContent className="bg-white">
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure you want to delete "{category.name}"</AlertDialogTitle>
+              
+              <AlertDialogTitle>Are you sure you want to delete "{toDelete}"</AlertDialogTitle>
               <AlertDialogDescription>
                 This action cannot is irriversible and cannot be Undone.
               </AlertDialogDescription>
