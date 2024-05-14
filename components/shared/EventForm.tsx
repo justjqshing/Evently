@@ -81,7 +81,7 @@ const EventForm = ({ userId, type}: EventFormProps) => {
           control={form.control}
           name="categoryId"
           render={({ field }) => (
-            <FormItem className="flex min-w-[200px]">
+            <FormItem className="flex max-w-[300px] min-w-[200px]">
               <FormControl>
                 <Dropdown onChangeHandler={field.onChange} value={field.value} userId={userId}></Dropdown>
               </FormControl>
