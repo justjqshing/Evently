@@ -47,7 +47,6 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
   const [deleteC, setDeleteC] = useState(false)
 
   const handleAddCategory = async () => {
-    setOpen(!open)
     
     const user = await getUserByClerkId(userId)
     setUsername(user.username)
@@ -149,7 +148,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={() => setOpen(!open)}>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => startTransition(handleAddCategory)}>Add</AlertDialogAction>
+              <AlertDialogAction onClick={() => { startTransition(handleAddCategory); setOpen(!open)}}>Add</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -163,7 +162,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className={buttonVariants({ variant: "coral" })} onClick={() => setAlreadyExist(!AlreadyExist)}>Ok</AlertDialogCancel>
+              <AlertDialogCancel className={buttonVariants({ variant: "coral" })} onClick={() => { setAlreadyExist(!AlreadyExist) }}>Ok</AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
