@@ -19,11 +19,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Input } from "../ui/input"
-import { createCategory, getAllCategories } from "@/lib/actions/category.actions"
+import { createCategory, getACategory, getAllCategories } from "@/lib/actions/category.actions"
 
 import { auth } from "@clerk/nextjs/server"
 import { getUserByClerkId, getUserById } from "@/lib/actions/user.actions"
-import { buttonVariants } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import Image from "next/image"
 
 
 type DropdownProps = {
@@ -42,6 +43,8 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
   const [AlreadyExist, setAlreadyExist] = useState(false)
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
+  const [confirm, setConfirm] = useState(false)
+  const [deleteC, setDeleteC] = useState(false)
 
   const handleAddCategory = async () => {
     setOpen(!open)
@@ -62,7 +65,26 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
     })
       .then((category) => {
         setCategories((prevState) => [...prevState, category])
+       
       })
+  }
+
+  const deleteCategory = async ( categoryId: string) => {
+    setConfirm(false)
+    const category = await getACategory(categoryId)
+
+
+
+    
+
+    const getCategories = async () => {
+      const user = await getUserByClerkId(userId)
+      const categoryList = await getAllCategories(user.username);
+      setCategories(categoryList as ICategory[])
+    }
+
+    getCategories();
+
   }
 
   useEffect(() => {
@@ -83,9 +105,29 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
       </SelectTrigger>
       <SelectContent>
         {categories.length > 0 && categories.map((category) => (
-          <SelectItem key={category._id} value={category._id} className="select-item p-regular-14">
-            {category.name}
-          </SelectItem>
+          <div className="flex flex-row justify-between ">
+            <SelectItem key={category._id} value={category._id} className="select-item p-regular-14">
+              {category.name}
+            </SelectItem>
+            <Image src='/assets/icons/trash.svg' width={30} height={20} alt='delete' onClick={() => setConfirm(true)} className=" text-primary-500 hover:bg-primary-50 focus:text-primary-500 px-2 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50" />
+            <AlertDialog open={confirm}>
+            <AlertDialogContent className="bg-white">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure you want to delete "{category.name}"</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot is irriversible and cannot be Undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className={buttonVariants({ variant: "outline" })} onClick={() => setConfirm(false)}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel className={buttonVariants({ variant: "destructive" })} onClick={() => {deleteCategory(category._id)}}>Ok</AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+          
+          </div>
+          
+        
         ))}
         <div className="flex w-full px-3 text-primary-500 hover:bg-primary-50 focus:text-primary-500 relative cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
         <h1 onClick={() => setOpen(!open)} className="select-item p-regular-14">
@@ -125,6 +167,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        
     </>
   )
 }
