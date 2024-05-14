@@ -21,18 +21,44 @@ import {
 import { Input } from "../ui/input"
 import { createCategory, getAllCategories } from "@/lib/actions/category.actions"
 
+import { auth } from "@clerk/nextjs/server"
+import { getUserByClerkId, getUserById } from "@/lib/actions/user.actions"
+import { buttonVariants } from "@/components/ui/button"
+
+
 type DropdownProps = {
   value?: string
   onChangeHandler?: () => void
+  userId: string
 }
 
-const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
-  const [categories, setCategories] = useState<ICategory[]>([])
-  const [newCategory, setNewCategory] = useState('');
 
-  const handleAddCategory = () => {
+const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
+  
+
+  const [categories, setCategories] = useState<ICategory[]>([])
+  const [check, setCheck] = useState('')
+  const [newCategory, setNewCategory] = useState('');
+  const [AlreadyExist, setAlreadyExist] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [username, setUsername] = useState('')
+
+  const handleAddCategory = async () => {
+    setOpen(!open)
+    
+    const user = await getUserByClerkId(userId)
+    setUsername(user.username)
+    if(categories.some(category => category.name === newCategory)) {
+      setAlreadyExist(true)
+      
+
+      return
+
+    };
     createCategory({
-      categoryName: newCategory.trim()
+      categoryName: newCategory.trim(),
+      Creator: user.username,
+     
     })
       .then((category) => {
         setCategories((prevState) => [...prevState, category])
@@ -41,8 +67,8 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
 
   useEffect(() => {
     const getCategories = async () => {
-      const categoryList = await getAllCategories();
-
+      const user = await getUserByClerkId(userId)
+      const categoryList = await getAllCategories(user.username);
       categoryList && setCategories(categoryList as ICategory[])
     }
 
@@ -50,6 +76,7 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
   }, [])
 
   return (
+    <>
     <Select onValueChange={onChangeHandler} defaultValue={value}>
       <SelectTrigger className="select-field">
         <SelectValue placeholder="Category" />
@@ -60,24 +87,45 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
             {category.name}
           </SelectItem>
         ))}
+        <div className="flex w-full px-3 text-primary-500 hover:bg-primary-50 focus:text-primary-500 relative cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+        <h1 onClick={() => setOpen(!open)} className="select-item p-regular-14">
+        Add New
+        </h1>
 
-        <AlertDialog>
-          <AlertDialogTrigger className="p-medium-14 flex w-full rounded-sm py-3 px-3 text-primary-500 hover:bg-primary-50 focus:text-primary-500">New Category</AlertDialogTrigger>
+        </div>
+       
+
+      </SelectContent>
+    </Select>
+    <AlertDialog open={open}>
           <AlertDialogContent className="bg-white">
             <AlertDialogHeader>
               <AlertDialogTitle>New Category</AlertDialogTitle>
               <AlertDialogDescription>
-                <Input type="text" placeholder="Category name" className="input-field mt-3" onChange={(e) => setNewCategory(e.target.value)} />
+                <Input type="text" placeholder="Category name" className="input-field mt-3 bg-coral " onChange={(e) => setNewCategory(e.target.value)} />
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel onClick={() => setOpen(!open)}>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={() => startTransition(handleAddCategory)}>Add</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </SelectContent>
-    </Select>
+
+        <AlertDialog open={AlreadyExist}>
+          <AlertDialogContent className="bg-white">
+            <AlertDialogHeader>
+              <AlertDialogTitle>"{newCategory}" Already Exists!</AlertDialogTitle>
+              <AlertDialogDescription>
+                
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className={buttonVariants({ variant: "coral" })} onClick={() => setAlreadyExist(!AlreadyExist)}>Ok</AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+    </>
   )
 }
 

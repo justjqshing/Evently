@@ -27,6 +27,17 @@ import { eventDefaultValues } from "@/constants"
 import Dropdown from "./dropdown"
 import { FileUploader } from "./FileUploader"
 import Image from 'next/image'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+
 
 type EventFormProps = {
     userId: string,
@@ -72,7 +83,7 @@ const EventForm = ({ userId, type}: EventFormProps) => {
           render={({ field }) => (
             <FormItem className="max-w-[25%]">
               <FormControl>
-                <Dropdown></Dropdown>
+                <Dropdown onChangeHandler={field.onChange} value={field.value} userId={userId}></Dropdown>
               </FormControl>
               <FormMessage />
             </FormItem>

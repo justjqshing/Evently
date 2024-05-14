@@ -12,7 +12,7 @@ export const eventFormSchema = z.object({
   categoryId: z.string(),
   price: z.string(),
   isFree: z.boolean(),
-  url: z.string()
+  url: z.string().url()
 }).refine(data => data.startDateTime < data.endDateTime, {
   message: 'End date must be after start date',
   path: ['endDateTime']

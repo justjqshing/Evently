@@ -27,6 +27,7 @@ module.exports = withUt({
         },
         coral: {
           500: '#15BF59',
+          DEFAULT: '#FF7F50'
         },
 
         grey: {
