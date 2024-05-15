@@ -51,8 +51,9 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
   const [max, setMax] = useState(false)
 
   const handleAddCategory = async () => {
+    console.log(`The user id is ${userId}`)
     const getCategories = async () => {
-      const user = await getUserByClerkId(userId)
+      const user = await getUserById(userId)
       const categoryList = await getAllCategories(user.username);
       console.log(categoryList.length)
       console.log(categories.length)
@@ -60,7 +61,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
     }
 
     
-    const user = await getUserByClerkId(userId)
+    const user = await getUserById(userId)
     setUsername(user.username)
     if(categories.length >= 10) {
       setMax(true)
@@ -93,7 +94,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
     
 
     const getCategories = async () => {
-      const user = await getUserByClerkId(userId)
+      const user = await getUserById(userId)
       const categoryList = await getAllCategories(user.username);
       setCategories(categoryList as ICategory[])
     }
@@ -104,7 +105,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
 
   useEffect(() => {
     const getCategories = async () => {
-      const user = await getUserByClerkId(userId)
+      const user = await getUserById(userId)
       const categoryList = await getAllCategories(user.username);
       categoryList && setCategories(categoryList as ICategory[])
     }

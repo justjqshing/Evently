@@ -1,11 +1,14 @@
 import EventForm from '@/components/shared/EventForm'
 import { auth } from '@clerk/nextjs/server'
+import { User } from 'lucide-react'
 import React from 'react'
 
 const page = () => {
-    const sessionClaims = auth()
+    const { sessionClaims } = auth()
 
-    const UserId = sessionClaims.userId as string
+    const userId = sessionClaims?.userId as string
+
+    console.log(userId)
 
 
     return (
@@ -15,7 +18,7 @@ const page = () => {
     </section>
     
     <div className='wrapper my-8'>
-        <EventForm userId={UserId} type='Create'/>
+        <EventForm userId={userId} type='Create'/>
 
     </div>
     

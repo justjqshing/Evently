@@ -30,7 +30,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={poppins.variable}>{children}</body>
-        <SpeedInsights/>
+        
       </html>
     </ClerkProvider>
     
