@@ -81,6 +81,10 @@ const EventForm = ({ userId, type}: EventFormProps) => {
               path: '/profile'
 
             })
+            if(newEvent){
+              console.log(`/events/${newEvent._id}`)
+              router.push(`/events/${newEvent._id}`)
+            }
             
           } catch (error) {
             console.log(error)
@@ -247,7 +251,7 @@ const EventForm = ({ userId, type}: EventFormProps) => {
                         height={24}
                         className="filter-grey"
                       />
-                      <Input type="number" disabled={checked} placeholder="Price"  {...field}  value={checked ? '120' : field.value} className="p-regular-16 border-0 bg-grey-50 outline-offset-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0" />
+                      <Input type="number" disabled={checked} placeholder="Price"  {...field}  value={checked ? 'Free!' : field.value} className="p-regular-16 border-0 bg-grey-50 outline-offset-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0" />
                       <FormField
                         control={form.control}
                         name="isFree"
