@@ -2,7 +2,6 @@ import { SearchParamProps } from '@/types'
 import React from 'react'
 import { getEventById } from '@/lib/actions/event.actions'
 
-
 const EventDetails = async ({ params: { id } }: SearchParamProps) => {
   console.log(id)
   const event = await getEventById(id);
@@ -17,12 +16,10 @@ const EventDetails = async ({ params: { id } }: SearchParamProps) => {
     hour12: true,
     timeZoneName: 'short'
   });
+  const time = new Date().toLocaleString()
   
-
-
-
   return (
-    <div>{date}</div>
+    <div>{date} {time}</div>
   )
 }
 
