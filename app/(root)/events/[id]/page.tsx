@@ -1,11 +1,13 @@
-import { SearchParamProps } from '@/types'
-import React from 'react'
-import { getEventById } from '@/lib/actions/event.actions'
+import { SearchParamProps } from '@/types';
+import React from 'react';
+import { getEventById } from '@/lib/actions/event.actions';
 
 const EventDetails = async ({ params: { id } }: SearchParamProps) => {
-  console.log(id)
   const event = await getEventById(id);
-  const date = new Date(event.startDateTime).toLocaleString(undefined, {
+
+  // Get the event's start date and time in ISO format (important for timezones)
+  const eventStartIso = new Date(event.startDateTime).toISOString();
+  console.log(new Date(eventStartIso).toLocaleString(undefined, {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
@@ -14,12 +16,17 @@ const EventDetails = async ({ params: { id } }: SearchParamProps) => {
     minute: 'numeric',
     second: 'numeric',
     hour12: true,
-    timeZoneName: 'short'
-  });
+    timeZoneName: 'short' 
+  }))
 
   return (
-    <div>{date}</div>
-  )
-}
+    <div>
+     
+        <span>
+          
+        </span>
+      </div>
+  );
+};
 
-export default EventDetails
+export default EventDetails;
