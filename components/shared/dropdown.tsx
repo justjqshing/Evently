@@ -54,13 +54,15 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
     const getCategories = async () => {
       const user = await getUserByClerkId(userId)
       const categoryList = await getAllCategories(user.username);
+      console.log(categoryList.length)
+      console.log(categories.length)
       return categoryList.length
     }
 
     
     const user = await getUserByClerkId(userId)
     setUsername(user.username)
-    if(await getCategories() >= 10) {
+    if(categories.length >= 10) {
       setMax(true)
       return
     }
