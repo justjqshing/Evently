@@ -16,10 +16,9 @@ const EventDetails = async ({ params: { id } }: SearchParamProps) => {
     hour12: true,
     timeZoneName: 'short'
   });
-  const time = new Date().toLocaleString()
   
   return (
-    <div>{date} {time}</div>
+    <div>{date}</div>
   )
 }
 
