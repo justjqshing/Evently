@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const formatDateTime = (dateString: Date) => {
+export const formatDateTime = (dateString: Date, timeZone: string = 'MST') => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
     weekday: 'short', // abbreviated weekday name (e.g., 'Mon')
     month: 'short', // abbreviated month name (e.g., 'Oct')
