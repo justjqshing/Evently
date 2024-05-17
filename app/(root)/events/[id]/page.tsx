@@ -1,4 +1,4 @@
-
+'use client'
 import { getEventById } from '@/lib/actions/event.actions'
 import { formatDateTime } from '@/lib/utils';
 import { SearchParamProps } from '@/types'
