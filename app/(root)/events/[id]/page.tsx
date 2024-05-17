@@ -7,10 +7,7 @@ import { date } from 'zod';
 
 const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
   const event = await getEventById(id);
-  const D = new Date()
-  let diff = D.getTimezoneOffset()
-  console.log(D)
-  console.log(diff)
+  
 
 
 
