@@ -6,6 +6,8 @@ import Image from 'next/image';
 
 const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
   const event = await getEventById(id);
+  const tz= Intl.DateTimeFormat().resolvedOptions();
+  console.log(tz)
 
 
 
