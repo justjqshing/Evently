@@ -3,11 +3,14 @@ import { getEventById } from '@/lib/actions/event.actions'
 import { formatDateTime } from '@/lib/utils';
 import { SearchParamProps } from '@/types'
 import Image from 'next/image';
+import { date } from 'zod';
 
 const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
   const event = await getEventById(id);
-  const tz= Intl.DateTimeFormat().resolvedOptions();
-  console.log(tz)
+  const D = new Date()
+  let diff = D.getTimezoneOffset()
+  console.log(D)
+  console.log(diff)
 
 
 
