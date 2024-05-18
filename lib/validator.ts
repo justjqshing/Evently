@@ -9,7 +9,7 @@ export const eventFormSchema = z.object({
     message: 'Start date must be in the future',
   }),
   endDateTime: z.date(),
-  categoryId: z.string(),
+  categoryId: z.string().min(1, 'Category is required'),
   price: z.string(),
   isFree: z.boolean(),
   url: z.string().url()
