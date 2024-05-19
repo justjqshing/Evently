@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { DeleteConfirmation } from './DeleteConfirmation'
 type cardProps = {
     event: IEvent,
     hasOrderLink: boolean,
@@ -14,6 +15,7 @@ type cardProps = {
 const Card = ({ event, hasOrderLink, hidePrice }: cardProps) => {
     const [userId, setUserId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null); 
+    const [visible, setVisible] = useState('flex opacity-0');
     useEffect(() => {
         const fetchAuthData = async () => {
           try {
@@ -40,7 +42,7 @@ const Card = ({ event, hasOrderLink, hidePrice }: cardProps) => {
     const formattedStartDateTime = (formatDateTime(startDateTime).dateTime)
     
     return (
-        <div className="group relative flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all hover:shadow-lg md:min-h-[438px]">
+        <div onMouseEnter={() => setVisible('animate-fade-in flex')} onMouseLeave={() => setVisible('animate-fade-out opacity-0 flex')} className=" group  relative flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all hover:shadow-lg md:min-h-[438px]">
       <Link 
         href={`/events/${event._id}`}
         style={{backgroundImage: `url(${event.imageUrl})`}}
@@ -49,10 +51,12 @@ const Card = ({ event, hasOrderLink, hidePrice }: cardProps) => {
       {/* IS EVENT CREATOR ... */}
 
       {isEventCreator && !hidePrice && (
-        <div className="absolute right-2 top-2 flex flex-col gap-4 rounded-xl bg-white p-3 shadow-sm transition-all">
+        <div className={`absolute right-2 top-2 flex-col gap-4 rounded-xl bg-white p-3 shadow-sm transition-all ${visible}`}>
           <Link href={`/events/${event._id}/update`}>
             <Image src="/assets/icons/edit.svg" alt="edit" width={20} height={20} />
           </Link>
+
+          <DeleteConfirmation eventId={event._id} />
 
         </div>
       )}

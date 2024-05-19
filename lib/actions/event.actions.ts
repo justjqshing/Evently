@@ -5,6 +5,8 @@ import Event from "../database/models/event.model";
 import User from '@/lib/database/models/user.model'
 import { handleError } from "../utils";
 import Category from "../database/models/category.model";
+import { revalidatePath } from 'next/cache'
+import { DeleteEventParams } from '@/types'
 
 const populateEvent = (query: any) => {
     return query
@@ -62,3 +64,14 @@ export const getAllEvents = async ({query, limit = 6, page, category}: GetAllEve
         handleError(error)
     }
 }
+export async function deleteEvent({ eventId, path }: DeleteEventParams) {
+    try {
+      await connectToDatabase()
+  
+      const deletedEvent = await Event.findByIdAndDelete(eventId)
+      if (deletedEvent) revalidatePath(path)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+  

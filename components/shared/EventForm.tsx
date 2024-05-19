@@ -40,19 +40,22 @@ import {
 import { useUploadThing } from "@/lib/uploadthing"
 import { useRouter } from "next/navigation"
 import { createEvent } from "@/lib/actions/event.actions"
+import { IEvent } from "@/lib/database/models/event.model"
 
 type EventFormProps = {
-    userId: string,
-    type: 'Create' | 'Update'
+  userId: string,
+  type: 'Create' | 'Update',
+  event?: IEvent,
+  eventId?: string 
 }
-const EventForm = ({ userId, type}: EventFormProps) => {
+const EventForm = ({ userId, type, event, eventId}: EventFormProps) => {
     const router = useRouter();
 
 
     const [checked, setChecked] = useState(false)
     const [date, setDate] = useState<Date>()
     const [files, setFiles] = useState<File[]>([])
-    const initialValues = eventDefaultValues
+    const initialValues = event && type === 'Update' ? {...event, startDateTime: new Date(event.startDateTime),endDateTime: new Date(event.endDateTime)} : eventDefaultValues
 
     const { startUpload } = useUploadThing('imageUploader')
 
