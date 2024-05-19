@@ -12,9 +12,9 @@ type cardProps = {
 }
 const Card = async ({ event, hasOrderLink, hidePrice }: cardProps) => {
     console.log(event)
-    const time = new Date()
-    const timezoneOffset = time.getTimezoneOffset()
-    console.log(timezoneOffset)
+    const time = new Date(event.startDateTime)
+    console.log(time)
+    
     return (
         <div>
 
