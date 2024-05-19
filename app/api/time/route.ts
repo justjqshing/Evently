@@ -1,14 +1,12 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest } from "next/server"; // Import NextRequest
 
 type ResponseData = {
-  message: string
-}
+  message: string | number; // Adjust message type to allow numbers (timezoneOffset)
+};
 
-const date = new Date();
-const timezoneOffset = date.getTimezoneOffset();
- 
-export function GET(
-    req: NextApiRequest,
-  ) {
-    return Response.json({ message: timezoneOffset })
-  }
+export async function GET(req: NextRequest) {
+  const date = new Date();
+  const timezoneOffset = date.getTimezoneOffset();
+  
+  return Response.json({ message: timezoneOffset });
+}
