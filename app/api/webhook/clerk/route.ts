@@ -4,6 +4,8 @@ import { WebhookEvent } from '@clerk/nextjs/server'
 import { createUser, deleteUser, updateUser } from '@/lib/actions/user.actions'
 import { clerkClient } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
+import { getAuth } from '@clerk/nextjs/server'
+import { NextRequest } from 'next/server'
  
 export async function POST(req: Request) {
  
@@ -104,4 +106,37 @@ export async function POST(req: Request) {
  
   return new Response('', { status: 200 })
 }
- 
+
+
+
+export async function GET(request: NextRequest) {
+  const { userId: clerkUserId } = getAuth(request); // Get Clerk's user ID
+
+  if (!clerkUserId) {
+    return NextResponse.json(
+      { message: "User not authenticated" },
+      { status: 401 } // Unauthorized
+    );
+  }
+
+  try {
+    // Fetch user session from Clerk
+    const user = await clerkClient.users.getUser(clerkUserId);
+    const userId = user.publicMetadata.userId; // Get your app's user ID
+
+    if (!userId) {
+      return NextResponse.json(
+        { message: "User ID not found in Clerk metadata" },
+        { status: 404 } // Not Found
+      );
+    }
+
+    return NextResponse.json({ userId });
+  } catch (error) {
+    console.error("Error fetching user from Clerk:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 } 
+    );
+  }
+}
