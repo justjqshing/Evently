@@ -80,13 +80,13 @@ module.exports = withUt({
         sm: 'calc(var(--radius) - 4px)',
       },
       keyframes: {
-        shimmer: {
-          '0%': { backgroundPosition: '0% 0%' },    // Corrected
-          '100%': { backgroundPosition: '100% 0%' },  // Corrected
+        'gemini-loading': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
         },
       },
       animation: {
-        shimmer: 'shimmer 1s infinite linear',
+        'gemini-loading': 'gemini-loading 2s linear infinite',
       },
     },
   },
