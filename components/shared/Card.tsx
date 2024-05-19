@@ -9,9 +9,21 @@ type cardProps = {
     hasOrderLink: boolean,
     hidePrice: boolean
 }
-const Card = ({ event, hasOrderLink, hidePrice }: cardProps) => {
+const Card = async ({ event, hasOrderLink, hidePrice }: cardProps) => {
     const { sessionClaims } = auth();
     const userId = sessionClaims?.userId as string;
+    async function getTimeOffset() {
+        const response = await fetch('http://localhost:3000/api/time');
+      
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      
+        const data = await response.json();
+        console.log(data.timezoneOffset);
+      }
+      
+      getTimeOffset().catch(e => console.log('There was a problem with your fetch operation: ' + e.message));
   
     const isEventCreator = userId === event.organizer._id.toString();
   
