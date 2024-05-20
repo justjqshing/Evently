@@ -4,18 +4,23 @@ import { User } from 'lucide-react'
 import React from 'react'
 import { UpdateEventParams } from '@/types'
 import { getEventById } from '@/lib/actions/event.actions'
+import { redirect } from 'next/navigation'
 type UpdateEventProps = {
     params: {
         id: string
     }
 }
+
+
 const UpdateEvent = async ({ params: { id } }: UpdateEventProps) => {
     const event = await getEventById(id)
     const { sessionClaims } = auth()
 
     const userId = sessionClaims?.userId as string
 
-    console.log(userId)
+    if (event?.organizer._id != userId) {
+        redirect('/')
+    }
 
 
     return (

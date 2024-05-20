@@ -50,6 +50,7 @@ type EventFormProps = {
 }
 const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
     const router = useRouter();
+    
 
 
     const [checked, setChecked] = useState(false)
@@ -94,10 +95,14 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           }
         }
         if(type === 'Update') {
+          console.log(`{event?.organizer._id: ${event?.organizer._id}`)
+          console.log(`userId: ${userId}`)
           if(!eventId) {
             router.back()
             return;
           }
+          
+          
     
           try {
             const updatedEvent = await updateEvent({
