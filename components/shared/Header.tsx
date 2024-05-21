@@ -1,13 +1,18 @@
 
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from '../ui/button'
 import NavItems from './Navitems'
 import MobileNav from './MobileNav'
+import { auth } from '@clerk/nextjs/server'
 
 const Header = () => {
+    const { sessionClaims } = auth()
+
+    const userId = sessionClaims?.userId as string
+    console.log(`The User id is : ${userId}`)
   return (
     <header className="w-full border-b">
         <div className='wrapper flex items-center justify-between'>
@@ -16,7 +21,7 @@ const Header = () => {
             </Link>
             <SignedIn>
                 <nav className='md:flex-between  hidden w-full max-w-xs'>
-                    <NavItems/>
+                <NavItems userId={userId} />
                 </nav>
             </SignedIn>
             <div className='flex w-32 justify-end gap-3'>

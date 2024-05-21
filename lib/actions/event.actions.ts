@@ -120,3 +120,18 @@ export async function deleteEvent({ eventId, path }: DeleteEventParams) {
       handleError(error)
     }
   }
+  export const getUserEvents = async (UserId: string) => {
+    try {
+        await connectToDatabase();
+
+        const event = await populateEvent(Event.find({organizer: UserId}));
+
+        if(!event){
+            throw new Error('Event not found');
+        } 
+
+        return JSON.parse(JSON.stringify(event));
+    } catch (error) {
+        handleError(error)
+    }
+}

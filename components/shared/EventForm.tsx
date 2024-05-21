@@ -86,7 +86,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
 
             })
             if(newEvent){
-              console.log(`/events/${newEvent._id}`)
+             
               router.push(`/events/${newEvent._id}`)
             }
             
@@ -95,7 +95,6 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           }
         }
         if(type === 'Update') {
-          console.log(`{event?.organizer._id: ${event?.organizer._id}`)
           console.log(`userId: ${userId}`)
           if(!eventId) {
             router.back()

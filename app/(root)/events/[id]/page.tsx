@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { CreateEventParams } from '@/types';
 import EventLoad from '@/components/shared/EventLoad';
 import Collection from '@/components/shared/Collection';
+import Link from 'next/link';
 
 const EventDetails =  ({ params: { id }, searchParams }: SearchParamProps) => {
   const [event, setEvent] = useState<CreateEventParams | null>(null);
@@ -78,12 +79,15 @@ const EventDetails =  ({ params: { id }, searchParams }: SearchParamProps) => {
                   event.category.name}
                 </p>
               </div>
-
+              <Link href={
+              `/${//@ts-ignore
+                event.organizer._id}/profile`}>
               <p className="p-medium-18 ml-2 mt-2 sm:mt-0">
                 by{' '}
                 <span className="text-primary-500">{// @ts-ignore
                 event.organizer.firstName} {event.organizer.lastName}</span>
               </p>
+              </Link>
             </div>
           </div>
 

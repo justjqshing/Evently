@@ -51,12 +51,10 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
   const [max, setMax] = useState(false)
 
   const handleAddCategory = async () => {
-    console.log(`The user id is ${userId}`)
     const getCategories = async () => {
       const user = await getUserById(userId)
       const categoryList = await getAllCategories(user.username);
-      console.log(categoryList.length)
-      console.log(categories.length)
+
       return categoryList.length
     }
 

@@ -8,7 +8,6 @@ const page = () => {
 
     const userId = sessionClaims?.userId as string
 
-    console.log(userId)
 
 
     return (

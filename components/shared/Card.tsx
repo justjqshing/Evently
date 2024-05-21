@@ -33,11 +33,9 @@ const Card = ({ event, hasOrderLink, hidePrice }: cardProps) => {
         fetchAuthData();
       }, []);
 
-      console.log(userId)
-      console.log(event.organizer._id.toString())
+
 
     const isEventCreator = userId === event.organizer._id.toString();
-    console.log(event)
     const startDateTime = new Date(event.startDateTime)
     const formattedStartDateTime = (formatDateTime(startDateTime).dateTime)
     
