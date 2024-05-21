@@ -1,15 +1,17 @@
 'use client'
-import { getEventById } from '@/lib/actions/event.actions'
+import { getEventById, getRelatedEventsByCategory } from '@/lib/actions/event.actions'
 import { formatDateTime } from '@/lib/utils';
 import { SearchParamProps } from '@/types'
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { CreateEventParams } from '@/types';
 import EventLoad from '@/components/shared/EventLoad';
+import Collection from '@/components/shared/Collection';
 
 const EventDetails =  ({ params: { id }, searchParams }: SearchParamProps) => {
   const [event, setEvent] = useState<CreateEventParams | null>(null);
   const [isLoading, setIsLoading] = useState(true); // Add this line
+  const [relatedEvents, setRelatedEvents] = useState(null)
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -17,8 +19,16 @@ const EventDetails =  ({ params: { id }, searchParams }: SearchParamProps) => {
       try {
         const ev = await getEventById(id);
         setEvent(ev);
+        const relatedEvent = await getRelatedEventsByCategory({
+          categoryId: ev.category._id,
+          eventId: id,
+          limit: 6,
+          page: searchParams.page as string,
+        });
+        setRelatedEvents(//@ts-ignore
+        relatedEvent || null); // Add this line to handle the case when relatedEvent is undefined
       } catch (err) {
-        return err
+        return err;
       }
       setIsLoading(false);
     }
@@ -120,6 +130,16 @@ const EventDetails =  ({ params: { id }, searchParams }: SearchParamProps) => {
     {/* EVENTS with the same category */}
     <section className="wrapper my-8 flex flex-col gap-8 md:gap-12">
       <h2 className="h2-bold">Related Events</h2>
+      <Collection
+        data={//@ts-ignore
+          relatedEvents?.data}
+        emptyTitle='No Events Found'
+        emptyStateSubtext='Come Back Later for More Events'
+        collectionType='All_Events'
+        limit={6}
+        page={1}
+        totalPages={2}
+        />
 
     
     </section>

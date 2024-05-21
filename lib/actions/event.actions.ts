@@ -1,5 +1,5 @@
 'use server'
-import { CreateEventParams, GetAllEventsParams, UpdateEventParams } from "@/types"
+import { CreateEventParams, GetAllEventsParams, GetRelatedEventsByCategoryParams, UpdateEventParams } from "@/types"
 import { connectToDatabase } from "../database";
 import Event from "../database/models/event.model";
 import User from '@/lib/database/models/user.model'
@@ -95,4 +95,28 @@ export async function deleteEvent({ eventId, path }: DeleteEventParams) {
       handleError(error)
     }
   }
+  export async function getRelatedEventsByCategory({
+    categoryId,
+    eventId,
+    limit = 3,
+    page = 1,
+  }: GetRelatedEventsByCategoryParams) {
+    try {
+      await connectToDatabase()
   
+      const skipAmount = (Number(page) - 1) * limit
+      const conditions = { $and: [{ category: categoryId }, { _id: { $ne: eventId } }] }
+  
+      const eventsQuery = Event.find(conditions)
+        .sort({ createdAt: 'desc' })
+        .skip(skipAmount)
+        .limit(limit)
+  
+      const events = await populateEvent(eventsQuery)
+      const eventsCount = await Event.countDocuments(conditions)
+  
+      return { data: JSON.parse(JSON.stringify(events)), totalPages: Math.ceil(eventsCount / limit) }
+    } catch (error) {
+      handleError(error)
+    }
+  }
