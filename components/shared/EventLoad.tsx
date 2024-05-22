@@ -27,10 +27,11 @@ const EventLoad = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-gray-300 via-white to-gray-300 animate-gemini-loading"></div>
                 </div>
               </div>
-              <div className="relative overflow-hidden rounded-xl border-2 border-gray-300 bg-gray-300 h-10 w-48 ml-2 mt-2 sm:mt-0">
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-300 via-white to-gray-300 animate-gemini-loading"></div>
-              </div>
+             
             </div>
+          </div>
+          <div className="relative overflow-hidden rounded-xl border-2 border-gray-300 bg-gray-300 h-10 w-48 ml-2 mt-2 sm:mt-0">
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-300 via-white to-gray-300 animate-gemini-loading"></div>
           </div>
 
           <div className="flex flex-col gap-5">
