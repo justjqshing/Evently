@@ -53,10 +53,17 @@ const MobileNav = () => {
             </SheetTrigger>
             
             <SheetContent className="flex flex-col gap-6 bg-white md:hidden ">
-              <SheetClose className="w-full absolute top-7 left-[91%] flex">
-                  <X className="h-5 w-5" onClick={() => setIsOpen(false)}/>
-              </SheetClose>
-               <Image src='/assets/images/logo.svg' width={128} height={38} alt="Logo"/>
+              <div className="flex flex-row justify-between">
+                <Image src='/assets/images/logo.svg' width={128} height={38} alt="Logo"/>
+                <SheetClose>
+                <X className="h-5 w-5" onClick={() => setIsOpen(false)}/>
+
+                </SheetClose>
+                
+                
+
+              </div>
+               
                <Separator className="border border-gray-50"/>
                <Navitems userId={userId}/>
 
