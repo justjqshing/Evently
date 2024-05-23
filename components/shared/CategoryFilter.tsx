@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { getAllCategories } from "@/lib/actions/category.actions";
+import { getAllCategories, isCategoryUsed } from "@/lib/actions/category.actions";
 import { ICategory } from "@/lib/database/models/category.model";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 
 const CategoryFilter = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [active, setActive] = useState<ICategory[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -27,6 +28,25 @@ const CategoryFilter = () => {
 
     getCategories();
   }, [])
+  const RefineCategories = async () => {
+    console.log(categories)
+  let activeCategories: ICategory[] = [];
+
+  for (let category of categories) {
+    const isActive = await isCategoryUsed(category._id);
+    if (isActive) {
+      activeCategories.push(category);
+    }
+  }
+
+  setActive(activeCategories);
+}
+useEffect(() => {
+    RefineCategories();
+}, [categories])
+
+  
+
 
   const onSelectCategory = (category: string) => {
       let newUrl = '';
@@ -46,7 +66,7 @@ const CategoryFilter = () => {
 
       router.push(newUrl, { scroll: false });
   }
-
+ 
   return (
     <Select onValueChange={(value: string) => onSelectCategory(value)}>
       <SelectTrigger className="select-field">
@@ -55,7 +75,7 @@ const CategoryFilter = () => {
       <SelectContent>
         <SelectItem value="All" className="select-item p-regular-14">All</SelectItem>
 
-        {categories.map((category) => (
+        {active.map((category) => (
           <SelectItem value={category.name} key={category._id} className="select-item p-regular-14">
             {category.name}
           </SelectItem>

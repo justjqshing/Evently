@@ -7,16 +7,18 @@ import { getAllEvents } from "@/lib/actions/event.actions";
 import Search from "@/components/shared/Search";
 import { SearchParamProps } from "@/types";
 import CategoryFilter from "@/components/shared/CategoryFilter";
+import Limit from "@/components/shared/Limit";
 export default async function Home({ searchParams }: SearchParamProps) {
 
   const page = Number(searchParams.page) || 1;
   const searchText = (searchParams?.query as string) || '';
   const category = (searchParams?.category as string) || '';
+  const limit = parseInt(searchParams?.limit as string) || 6;
   const getEvents = await getAllEvents({
     query: searchText,
     category,
     page,
-    limit: 6
+    limit
   })
 
   return (
@@ -41,6 +43,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
         <div className="flex w-full flex-col gap-5 md:flex-row">
          <Search/>
          <CategoryFilter/>
+         <Limit/>
         </div>
 
         <Collection

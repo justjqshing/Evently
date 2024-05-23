@@ -4,6 +4,7 @@ import { CreateCategoryParams } from "@/types";
 import { handleError } from "../utils";
 import { connectToDatabase } from "../database";
 import Category from "../database/models/category.model";
+import Event from "../database/models/event.model";
 
 export const createCategory = async ({ categoryName, Creator }: CreateCategoryParams) => {
   try {
@@ -113,5 +114,25 @@ export async function getAllCategories (){
 
   } catch (error) {
     handleError(error)
+  }
+}
+export async function isCategoryUsed(categoryId: string) {
+  try {
+    await connectToDatabase();
+
+    // Check if any event uses this category
+    const event = await Event.findOne({ category: categoryId });
+
+    // If an event is found, return the category
+    if (event) {
+      const category = await Category.findById(categoryId);
+      console.log(category)
+      return JSON.parse(JSON.stringify(category));
+    }
+
+    // If no event is found, return null or appropriate response
+    return null;
+  } catch (error) {
+    handleError(error);
   }
 }
