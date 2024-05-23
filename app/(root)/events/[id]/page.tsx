@@ -21,11 +21,13 @@ const EventDetails =  ({ params: { id }, searchParams }: SearchParamProps) => {
         const ev = await getEventById(id);
         setEvent(ev);
         const relatedEvent = await getRelatedEventsByCategory({
-          categoryId: ev.category._id,
+          categoryName: ev.category.name,
           eventId: id,
           limit: 6,
           page: searchParams.page as string,
         });
+        console.log()
+        
         setRelatedEvents(//@ts-ignore
         relatedEvent || null); // Add this line to handle the case when relatedEvent is undefined
       } catch (err) {

@@ -13,7 +13,7 @@ const page = async ({ params: { id } }: UpdateEventProps) => {
   const events = await getUserEvents(id)
   console.log(events)
 
-  const category = await getbyID('66464768f9d6119bd71a60e0')
+  
   
 
   return (

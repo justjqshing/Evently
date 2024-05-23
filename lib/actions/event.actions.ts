@@ -7,7 +7,11 @@ import { handleError } from "../utils";
 import Category from "../database/models/category.model";
 import { revalidatePath } from 'next/cache'
 import { DeleteEventParams } from '@/types'
-
+function getRandomSortOrder() {
+  const options = ["desc", "asc"];
+  const randomIndex = Math.floor(Math.random() * options.length);
+  return options[randomIndex];
+}
 const populateEvent = (query: any) => {
     return query
       .populate({ path: 'organizer', model: User, select: '_id firstName lastName' })
@@ -96,42 +100,55 @@ export async function deleteEvent({ eventId, path }: DeleteEventParams) {
     }
   }
   export async function getRelatedEventsByCategory({
-    categoryId,
+    categoryName, 
     eventId,
     limit = 3,
     page = 1,
-  }: GetRelatedEventsByCategoryParams) {
-    try {
-      await connectToDatabase()
-  
-      const skipAmount = (Number(page) - 1) * limit
-      const conditions = { $and: [{ category: categoryId }, { _id: { $ne: eventId } }] }
-  
-      const eventsQuery = Event.find(conditions)
-        .sort({ createdAt: 'desc' })
-        .skip(skipAmount)
-        .limit(limit)
-  
-      const events = await populateEvent(eventsQuery)
-      const eventsCount = await Event.countDocuments(conditions)
-  
-      return { data: JSON.parse(JSON.stringify(events)), totalPages: Math.ceil(eventsCount / limit) }
-    } catch (error) {
-      handleError(error)
-    }
-  }
-  export const getUserEvents = async (UserId: string) => {
+}: GetRelatedEventsByCategoryParams) {
     try {
         await connectToDatabase();
+        const skipAmount = (Number(page) - 1) * limit;
 
-        const event = await populateEvent(Event.find({organizer: UserId}));
+        // 1. Get all Event IDs with the same category name
+        const relatedEventIds = await Event.find({ 
+            category: { $in: await Category.find({ name: categoryName }).distinct('_id') }
+        }).distinct('_id');
 
-        if(!event){
-            throw new Error('Event not found');
-        } 
+        // 2. Filter out the current event
+        const filteredEventIds = relatedEventIds.filter(id => id.toString() !== eventId);
 
-        return JSON.parse(JSON.stringify(event));
+        // 3. Query events by filtered IDs and paginate
+        const sortOrder = getRandomSortOrder();
+        const eventsQuery = Event.find({ _id: { $in: filteredEventIds } })
+            //@ts-ignore
+            .sort({ createdAt: sortOrder })
+            .skip(skipAmount)
+            .limit(3);
+
+        const events = await populateEvent(eventsQuery);
+
+        // 4. Calculate the total number of related events
+        const eventsCount = filteredEventIds.length;
+
+        return { 
+            data: JSON.parse(JSON.stringify(events)), 
+        };
     } catch (error) {
-        handleError(error)
+        handleError(error);
     }
+}
+export const getUserEvents = async (UserId: string) => {
+  try {
+      await connectToDatabase();
+
+      const event = await populateEvent(Event.find({organizer: UserId}));
+
+      if(!event){
+          throw new Error('Event not found');
+      } 
+
+      return JSON.parse(JSON.stringify(event));
+  } catch (error) {
+      handleError(error)
+  }
 }
