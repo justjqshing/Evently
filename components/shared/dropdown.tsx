@@ -19,7 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Input } from "../ui/input"
-import { createCategory, getACategory, getAllCategories, getbyID } from "@/lib/actions/category.actions"
+import { createCategory, getACategory, getUserCatagories, getbyID } from "@/lib/actions/category.actions"
 
 import { auth } from "@clerk/nextjs/server"
 import { getUserByClerkId, getUserById } from "@/lib/actions/user.actions"
@@ -53,7 +53,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
   const handleAddCategory = async () => {
     const getCategories = async () => {
       const user = await getUserById(userId)
-      const categoryList = await getAllCategories(user.username);
+      const categoryList = await getUserCatagories(user.username);
 
       return categoryList.length
     }
@@ -85,7 +85,9 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
 
   const deleteCategory = async ( categoryId: string) => {
     setConfirm(false)
-    const category = await getACategory(categoryId)
+    const user = await getUserById(userId)
+    console.log(user.username)
+    const category = await getACategory(categoryId, user.username)
 
 
 
@@ -93,7 +95,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
 
     const getCategories = async () => {
       const user = await getUserById(userId)
-      const categoryList = await getAllCategories(user.username);
+      const categoryList = await getUserCatagories(user.username);
       setCategories(categoryList as ICategory[])
     }
 
@@ -104,7 +106,7 @@ const Dropdown = ({ value, onChangeHandler, userId }: DropdownProps) => {
   useEffect(() => {
     const getCategories = async () => {
       const user = await getUserById(userId)
-      const categoryList = await getAllCategories(user.username);
+      const categoryList = await getUserCatagories(user.username);
       categoryList && setCategories(categoryList as ICategory[])
     }
 

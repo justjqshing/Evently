@@ -12,6 +12,10 @@ function getRandomSortOrder() {
   const randomIndex = Math.floor(Math.random() * options.length);
   return options[randomIndex];
 }
+
+const getCategoryByName = async (name: string) => {
+  return Category.findOne({ name: name })
+}
 const populateEvent = (query: any) => {
     return query
       .populate({ path: 'organizer', model: User, select: '_id firstName lastName' })
@@ -57,11 +61,11 @@ export async function getAllEvents({ query, limit = 6, page, category }: GetAllE
       query = query.slice(0, -1);
     }
 
-    const titleCondition = query ? { title: { $regex: query} } : {}
+    const titleCondition = query ? { title: { $regex: new RegExp(query, 'i') } } : {}
+    const categoryCondition = category ? await getCategoryByName(category) : null
     const conditions = {
-      $and: [titleCondition],
+      $and: [titleCondition, categoryCondition ? { category: categoryCondition._id } : {}],
     }
-
     const skipAmount = (Number(page) - 1) * limit
     const eventsQuery = Event.find(conditions)
       .sort({ createdAt: 'desc' })

@@ -1,25 +1,40 @@
 "use server"
 
-import { CreateCategoryParams } from "@/types"
-import { handleError } from "../utils"
-import { connectToDatabase } from "../database"
-import Category from "../database/models/category.model"
+import { CreateCategoryParams } from "@/types";
+import { handleError } from "../utils";
+import { connectToDatabase } from "../database";
+import Category from "../database/models/category.model";
 
 export const createCategory = async ({ categoryName, Creator }: CreateCategoryParams) => {
   try {
     await connectToDatabase();
 
-    const newCategory = await Category.create({ name: categoryName, creator: Creator });
+    // 1. Check if Category Exists
+    let existingCategory = await Category.findOne({ name: categoryName });
 
-    
+    if (existingCategory) {
+      // 2a. Add Creator to Array (if not already present)
+      if (!existingCategory.creator.includes(Creator)) {
+        existingCategory.creator.push(Creator);
+        await existingCategory.save(); // Important: Save changes
+      }
 
-    return JSON.parse(JSON.stringify(newCategory));
+      return JSON.parse(JSON.stringify(existingCategory)); // Return updated category
+    } else {
+      // 2b. Create New Category
+      const newCategory = await Category.create({ 
+        name: categoryName, 
+        creator: [Creator] // Initialize creators array
+      });
+
+      return JSON.parse(JSON.stringify(newCategory));
+    }
   } catch (error) {
-    handleError(error)
+    handleError(error);
   }
-}
+};
 
-export const getAllCategories = async (userId: string) => {
+export const getUserCatagories = async (userId: string) => {
   try {
     await connectToDatabase();
 
@@ -30,16 +45,28 @@ export const getAllCategories = async (userId: string) => {
     handleError(error)
   }
 }
-export const getACategory = async (category: string) => {
+export const getACategory = async (categoryId: string, creatorToDelete?: string) => { // Made creatorToDelete optional
   try {
     await connectToDatabase();
-   
-    const categories = await Category.findByIdAndUpdate(category, {creator: 'DELETED'});
+    let category = await Category.findById(categoryId);
 
+    if (!category) {
+      throw new Error('Category not found');
+    }
 
-    return
+    // Handle optional deletion of creator (if creatorToDelete is provided)
+    if (creatorToDelete) {
+      if (category.creator.length > 1) {
+        category.creator = category.creator.filter(c => c !== creatorToDelete);
+      } else if (category.creator.length === 1) {
+        category.creator = ["DELETED"];
+      }
+      await category.save(); // Save changes if deletion occurred
+    }
+
+    return JSON.parse(JSON.stringify(category));
   } catch (error) {
-    handleError(error)
+    handleError(error);
   }
 }
 export const getbyID = async (category: string) => {
@@ -70,6 +97,19 @@ export async function deleteCategory(id: string, ) {
     }
 
     // Unlink relationships
+  } catch (error) {
+    handleError(error)
+  }
+}
+export async function getAllCategories (){
+  try {
+    await connectToDatabase();
+
+    const categories = await Category.find();
+
+    return JSON.parse(JSON.stringify(categories));
+
+
   } catch (error) {
     handleError(error)
   }

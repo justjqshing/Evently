@@ -61,7 +61,7 @@ const Card = ({ event, hidePrice }: cardProps) => {
       <div
         className="flex min-h-[230px] flex-col gap-3 p-5 md:gap-4"
       > 
-       {!hidePrice && <div className="flex gap-2">
+       {event.category &&  <div className="flex gap-2">
           <span className="p-semibold-14 w-min rounded-full bg-green-100 px-4 py-1 text-green-60">
             {event.isFree ? 'FREE' : `$${event.price}`}
           </span>
