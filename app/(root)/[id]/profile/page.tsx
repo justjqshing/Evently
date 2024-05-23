@@ -3,6 +3,9 @@ import { useRouter } from 'next/navigation'
 import { getUserEvents } from '@/lib/actions/event.actions'
 import { getbyID } from '@/lib/actions/category.actions'
 import Card from '@/components/shared/Card'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import Collection from '@/components/shared/Collection'
 type UpdateEventProps = {
   params: {
       id: string
@@ -17,19 +20,31 @@ const page = async ({ params: { id } }: UpdateEventProps) => {
   
 
   return (
-    <div className='flex flex-row justify-between wrapper'>
-          <ul className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:gap-10">
-            {events.map((event: any) => {
-              return (
-                <li key={event._id} className="flex justify-center">
-                  <Card event={event} hasOrderLink={false} hidePrice={false} />
-                </li>
-              )
-            })}
-          </ul>
+    <>
+    <section className="bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10">
+    <div className="wrapper flex items-center justify-center sm:justify-between">
+      <h3 className='h3-bold text-center sm:text-left'>Events Organized</h3>
+      <Button asChild size="lg" className="button hidden sm:flex">
+        <Link href="/events/create">
+          Create New Event
+        </Link>
+      </Button>
+    </div>
+  </section>
 
-          
-        </div>      
+  <section className="wrapper my-8">
+    <Collection 
+      data={events}
+      emptyTitle="No events have been created yet"
+      emptyStateSubtext="Go create some now"
+      collectionType="Events_Organized"
+      limit={3}
+      page={1}
+      urlParamName="eventsPage"
+      totalPages={2}
+    />
+  </section>
+  </>
 
   )
 }

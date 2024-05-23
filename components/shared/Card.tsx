@@ -9,10 +9,9 @@ import { useEffect, useState } from 'react'
 import { DeleteConfirmation } from './DeleteConfirmation'
 type cardProps = {
     event: IEvent,
-    hasOrderLink: boolean,
     hidePrice: boolean
 }
-const Card = ({ event, hasOrderLink, hidePrice }: cardProps) => {
+const Card = ({ event, hidePrice }: cardProps) => {
     const [userId, setUserId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null); 
     const [visible, setVisible] = useState('flex opacity-0');
@@ -84,12 +83,7 @@ const Card = ({ event, hasOrderLink, hidePrice }: cardProps) => {
             {event.organizer.firstName} {event.organizer.lastName}
           </p>
 
-          {hasOrderLink && (
-            <Link href={`/orders?eventId=${event._id}`} className="flex gap-2">
-              <p className="text-primary-500">Order Details</p>
-              <Image src="/assets/icons/arrow.svg" alt="search" width={10} height={10} />
-            </Link>
-          )}
+        
         </div>
       </div>
     </div>
