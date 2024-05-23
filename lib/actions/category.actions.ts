@@ -57,7 +57,8 @@ export const getACategory = async (categoryId: string, creatorToDelete?: string)
     // Handle optional deletion of creator (if creatorToDelete is provided)
     if (creatorToDelete) {
       if (category.creator.length > 1) {
-        category.creator = category.creator.filter(c => c !== creatorToDelete);
+        category.creator = category.creator.filter(//@ts-ignore
+        c => c !== creatorToDelete);
       } else if (category.creator.length === 1) {
         category.creator = ["DELETED"];
       }
