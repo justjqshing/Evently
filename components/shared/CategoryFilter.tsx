@@ -69,15 +69,14 @@ const CategoryFilter = () => {
 
   return (
     <>
-    <div className={`${Overlay ? 'block' : 'hidden'} absolute top-[100%] mr-[1000px] h-full w-screen bg-transparent z-40`}>
+    <div className={`${Overlay ? 'block' : 'hidden'} absolute top-[100%] h-[100%] w-screen  z-40`}>
 
     </div>
     <div className="z-50">
 
 
-    <Select onValueChange={(value: string) => onSelectCategory(value)}>
-      <SelectTrigger className="select-field" onClick={() => SetOverlay(true)} >
-        
+    <Select onValueChange={(value: string) => onSelectCategory(value)} onOpenChange={() => setTimeout(() => SetOverlay(!Overlay), 100)}>
+      <SelectTrigger className="select-field" onClick={() => SetOverlay(true)}>
         <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent>
