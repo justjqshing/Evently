@@ -16,7 +16,7 @@ import { isCategoryUsed } from "@/lib/actions/category.actions";
 
 const CategoryFilter = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [Overlay, SetOverlay] = useState(true);
+  const [Overlay, SetOverlay] = useState(false);
   const router = useRouter();
   const [active, setActive] = useState<ICategory[]>([]);
   const searchParams = useSearchParams();
@@ -76,7 +76,7 @@ const CategoryFilter = () => {
 
 
     <Select onValueChange={(value: string) => onSelectCategory(value)}>
-      <SelectTrigger className="select-field" onClick={() => SetOverlay(true)}>
+      <SelectTrigger className="select-field" onClick={() => SetOverlay(true)} >
         
         <SelectValue placeholder="Category" />
       </SelectTrigger>

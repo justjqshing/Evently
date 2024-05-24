@@ -38,7 +38,7 @@ const Search = () => {
       <Input
         type="text"
         placeholder='Search Events...'
-        value={query} // Bind input value to the query state
+        value={!query ? '' : query} // Bind input value to the query state
         onChange={handleInputChange}
         className="p-regular-16 border-0 bg-transparent outline-offset-0 placeholder:text-grey-500 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
       />
