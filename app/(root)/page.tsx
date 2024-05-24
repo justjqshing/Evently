@@ -9,7 +9,6 @@ import { SearchParamProps } from "@/types";
 import CategoryFilter from "@/components/shared/CategoryFilter";
 import Limit from "@/components/shared/Limit";
 import Filters from "@/components/shared/Filters";
-import { SearchProvider } from "@/components/shared/searchContext";
 export default async function Home({ searchParams }: SearchParamProps) {
 
   const page = Number(searchParams.page) || 1;
@@ -24,7 +23,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
   })
 
   return (
-    <SearchProvider>
+
     <>
        <section className="bg-primary-50 bg-dotted-pattern bg-contain py-5 md:py-10">
         <div className="wrapper grid grid-cols-1 gap-5 md:grid-cols-2 2xl:gap-0">
@@ -43,7 +42,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
       </section> 
       <section id="events" className="wrapper my-8 flex flex-col gap-8 md:gap-12 text-center">
         <h2 className="h2-bold">Trusted by <br className="max-sm:flex hidden"/> Thousands of Events</h2>
-        <div className="flex w-full flex-col gap-5 md:flex-row">
+        <div className="flex w-full flex-col gap-5 md:flex-row z-50">
          <Search />
          <CategoryFilter/>
          <Filters limit={limit} searchParams={searchParams} params={{
@@ -51,6 +50,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
           }}/>
         </div>
 
+        
         <Collection
         data={getEvents?.data}
         emptyTitle='No Events Found'
@@ -61,11 +61,8 @@ export default async function Home({ searchParams }: SearchParamProps) {
         totalPages={2}
         />
 
-
-       
       </section>
       
     </>
-    </SearchProvider>
 )
 }

@@ -1,4 +1,4 @@
-'use client';
+"use client"
 
 import {
   Select,
@@ -6,32 +6,49 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { getAllCategories, isCategoryUsed } from "@/lib/actions/category.actions";
+} from "@/components/ui/select"
+import { getAllCategories } from "@/lib/actions/category.actions";
 import { ICategory } from "@/lib/database/models/category.model";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useSearchContext } from "./searchContext";
+import { useEffect, useRef, useState } from "react";
+import { isCategoryUsed } from "@/lib/actions/category.actions";
 
 const CategoryFilter = () => {
-  const [track, setTrack] = useState(0); // Add this line
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [active, setActive] = useState<ICategory[]>([]);
+  const [Overlay, SetOverlay] = useState(true);
   const router = useRouter();
+  const [active, setActive] = useState<ICategory[]>([]);
   const searchParams = useSearchParams();
-  const { setQuery } = useSearchContext(); // Access setQuery for clearing search
 
   useEffect(() => {
     const getCategories = async () => {
       const categoryList = await getAllCategories();
 
-      categoryList && setCategories(categoryList as ICategory[]);
-    };
+      categoryList && setCategories(categoryList as ICategory[])
+    }
 
     getCategories();
-  }, []);
+  }, [])
 
+  const onSelectCategory = (category: string) => {
+      let newUrl = '';
+
+      if(category && category !== 'All') {
+        newUrl = formUrlQuery({
+          params: searchParams.toString(),
+          key: 'category',
+          value: category
+        })
+      } else {
+        newUrl = removeKeysFromQuery({
+          params: searchParams.toString(),
+          keysToRemove: ['category']
+        })
+      }
+
+      router.push(newUrl, { scroll: false });
+  }
   const RefineCategories = async () => {
     let activeCategories: ICategory[] = [];
 
@@ -49,51 +66,23 @@ const CategoryFilter = () => {
     RefineCategories();
   }, [categories]);
 
-  useEffect(() => {
-    console.log('reloaded')
-    if (!searchParams.get('category')) {
-      console.log('no category')
-    }
-  }, [searchParams]); 
-
-  const onSelectCategory = (category: string) => {
-    let newUrl = '';
-
-    if (category && category !== 'All') {
-      newUrl = formUrlQuery({
-        params: searchParams.toString(),
-        key: 'category',
-        value: category,
-      });
-    } else {
-      // Clear all filters (including search) when "All" is selected
-      newUrl = removeKeysFromQuery({
-        params: searchParams.toString(),
-        keysToRemove: ['category', 'limit', 'query'], // Remove other filter keys if applicable
-      });
-      setQuery(''); // Clear the search query
-    }
-
-    router.push(newUrl, { scroll: false });
-  };
-  const handleValueChnage = ({ value }: { value: string }) => {
-    
-    if (!searchParams.get('category') && track > 0) {
-      setTrack(track + 1);
-      onSelectCategory('hfggfh');
-    } else {
-      onSelectCategory(value);
-    }
-
-  };
 
   return (
-    <Select onValueChange={(value) => handleValueChnage({ value })} defaultValue="All" value={searchParams.get('category') || 'All'}>
-      <SelectTrigger className="select-field">
-        <SelectValue  />
+    <>
+    <div className={`${Overlay ? 'block' : 'hidden'} absolute top-[100%] mr-[1000px] h-full w-screen bg-transparent z-40`}>
+
+    </div>
+    <div className="z-50">
+
+
+    <Select onValueChange={(value: string) => onSelectCategory(value)}>
+      <SelectTrigger className="select-field" onClick={() => SetOverlay(true)}>
+        
+        <SelectValue placeholder="Category" />
       </SelectTrigger>
-      <SelectContent >
+      <SelectContent>
         <SelectItem value="All" className="select-item p-regular-14">All</SelectItem>
+
         {active.map((category) => (
           <SelectItem value={category.name} key={category._id} className="select-item p-regular-14">
             {category.name}
@@ -101,7 +90,10 @@ const CategoryFilter = () => {
         ))}
       </SelectContent>
     </Select>
-  );
-};
+    </div>
+    </>
+   
+  )
+}
 
-export default CategoryFilter;
+export default CategoryFilter
