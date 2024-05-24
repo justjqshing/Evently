@@ -8,6 +8,7 @@ import Search from "@/components/shared/Search";
 import { SearchParamProps } from "@/types";
 import CategoryFilter from "@/components/shared/CategoryFilter";
 import Limit from "@/components/shared/Limit";
+import Filters from "@/components/shared/Filters";
 export default async function Home({ searchParams }: SearchParamProps) {
 
   const page = Number(searchParams.page) || 1;
@@ -43,7 +44,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
         <div className="flex w-full flex-col gap-5 md:flex-row">
          <Search/>
          <CategoryFilter/>
-         <Limit/>
+         <Filters limit={limit}/>
         </div>
 
         <Collection

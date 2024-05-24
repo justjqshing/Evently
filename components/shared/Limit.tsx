@@ -15,37 +15,49 @@ import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import Image from 'next/image'
 
-const Limit = () => {
-  const [limit, Setlimit] = useState('') 
+
+const Limit = ({ limit }: { limit: number }) => {
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
   let delayDebounceFn: NodeJS.Timeout | null = null;
+  useEffect(() => {
+    const limit = parseInt(searchParams.get('limit') as string) || 6;
+    console.log(limit)
+  }, [])
 
-const onSelectCategory = (limit: string) => {
-  if (delayDebounceFn) {
-    clearTimeout(delayDebounceFn);
-  }
+  const handleChange = (limit: string) => {
+    
+      if (delayDebounceFn) {
+        clearTimeout(delayDebounceFn);
+      }
 
-  delayDebounceFn = setTimeout(() => {
-    let newUrl = '';
+      delayDebounceFn = setTimeout(() => {
+        let newUrl = '';
 
-    if(limit && limit !== 'All') {
-      newUrl = formUrlQuery({
-        params: searchParams.toString(),
-        key: 'limit',
-        value: limit
-      })
-    } else {
-      newUrl = removeKeysFromQuery({
-        params: searchParams.toString(),
-        keysToRemove: ['limit']
-      })
+        if(limit && limit !== 'All') {
+          newUrl = formUrlQuery({
+            params: searchParams.toString(),
+            key: 'limit',
+            value: limit
+          })
+        } else {
+          newUrl = removeKeysFromQuery({
+            params: searchParams.toString(),
+            keysToRemove: ['limit']
+          })
+        }
+
+        router.push(newUrl, { scroll: false });
+      }, 300)
     }
 
-    router.push(newUrl, { scroll: false });
-  }, 300)
-}
+  
+
+   
+
+
 
 
 
@@ -55,7 +67,8 @@ const onSelectCategory = (limit: string) => {
     <Input 
     type="text"
     placeholder='Max Events/Page'
-    onChange={(e) => onSelectCategory(e.target.value)}
+    defaultValue={limit}
+    onChange={(e) => handleChange(e.target.value)}
     className="p-regular-16 border-0 bg-transparent outline-offset-0 placeholder:text-grey-500 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
   />
 </div>
