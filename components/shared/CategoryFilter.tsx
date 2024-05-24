@@ -69,7 +69,7 @@ const CategoryFilter = () => {
 
   return (
     <>
-    <div className={`${Overlay ? 'block' : 'hidden'} absolute top-[100%] h-[100%] bg-black w-screen  z-40`}>
+    <div className={`${Overlay ? 'block' : 'hidden'} absolute top-[100%] h-[1000%] bg-black w-screen  z-40`}>
 
     </div>
     <div className="z-50">
