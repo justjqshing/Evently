@@ -11,8 +11,9 @@ import { auth } from '@clerk/nextjs/server'
 const Header = () => {
     const { sessionClaims } = auth()
 
-    const userId = sessionClaims?.userId as string
-    console.log(`The User id is : ${userId}`)
+    const userid = sessionClaims?.userId as string
+    const name = sessionClaims?.name as string
+    console.log(`The User id is : ${name} also ${userid}`)
   return (
     <header className="w-full border-b">
         <div className='wrapper flex items-center justify-between'>
@@ -21,7 +22,7 @@ const Header = () => {
             </Link>
             <SignedIn>
                 <nav className='md:flex-between  hidden w-full max-w-xs'>
-                <NavItems userId={userId} />
+                <NavItems userId={userid} />
                 </nav>
             </SignedIn>
             <div className='flex w-32 justify-end gap-3'>

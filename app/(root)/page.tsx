@@ -9,7 +9,9 @@ import { SearchParamProps } from "@/types";
 import CategoryFilter from "@/components/shared/CategoryFilter";
 import Limit from "@/components/shared/Limit";
 import Filters from "@/components/shared/Filters";
+
 export default async function Home({ searchParams }: SearchParamProps) {
+
 
   const page = Number(searchParams.page) || 1;
   const searchText = (searchParams?.query as string) || '';
