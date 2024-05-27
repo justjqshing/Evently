@@ -22,6 +22,8 @@ export default async function Home({ searchParams }: SearchParamProps) {
     limit
   })
 
+  console.log(getEvents?.totalPages)
+
   return (
 
     <>
@@ -40,10 +42,10 @@ export default async function Home({ searchParams }: SearchParamProps) {
           <Image src='/assets/images/hero.png' width={1000} height={1000} alt='Evently Logo'/>
         </div>
       </section> 
-      <section id="events" className="wrapper my-8 flex flex-col gap-8 md:gap-12 text-center">
+      <section id="events" className="wrapper my-0 flex flex-col gap-8 md:gap-12 text-center">
         <h2 className="h2-bold">Trusted by <br className="max-sm:flex hidden"/> Thousands of Events</h2>
-        <div className="flex w-full flex-col gap-5 md:flex-row">
-         <Filters limit={limit} searchParams={searchParams} params={{
+        <div className="flex w-full flex-col gap-5 md:flex-row -mb-7">
+         <Filters limit={limit} totalPages={getEvents?.totalPages} searchParams={searchParams} params={{
             id: ""
           }}/>
         </div>
@@ -56,7 +58,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
         collectionType='All_Events'
         limit={6}
         page={1}
-        totalPages={2}
+        totalPages={getEvents?.totalPages}
         />
 
       </section>

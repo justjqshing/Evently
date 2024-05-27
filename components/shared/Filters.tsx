@@ -13,16 +13,18 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import Pagecount from './Pagecount'
 import { SearchParamProps } from '@/types'
 import { useRouter } from 'next/navigation'
 import Limit from './Limit'
 import { useState, useEffect } from 'react'
 import Search from './Search'
 import CategoryFilter from './CategoryFilter'
-const Filters = ({ limit, searchParams }: { limit: number } & SearchParamProps) => {
+const Filters = ({ totalPages, limit, searchParams }: { limit: number } & {totalPages?: number} & SearchParamProps) => {
   const router = useRouter();
   const [saved, setSaved] = useState(false); 
   const [resetSearch, setResetSearch] = useState(false);
+  const [resetCategory, setResetCategory] = useState(false);
  
 
   const lim = parseInt(searchParams?.limit as string) || 6;
@@ -34,13 +36,23 @@ const Filters = ({ limit, searchParams }: { limit: number } & SearchParamProps) 
     newSearchParams.forEach((_, value) => newSearchParams.delete(value));
     router.push(`?${newSearchParams.toString()}`, { scroll: false }); 
     setResetSearch(true)
+    setResetCategory(true)
   };
 
   return (
-    <section id="events" className="wrapper my-8 flex flex-col gap-8 md:gap-12 text-center">
+    <section className="wrapper my-0 flex flex-col gap-8 md:gap-12 text-center">
+      <div className='w-full flex justify-end -mb-7'>
+        <Pagecount totalPages={totalPages}/>
+     </div>
     <div className="flex w-full flex-col gap-5 md:flex-row">
-    <Search reset={resetSearch} setSaved={setResetSearch}/>
-    <CategoryFilter/>
+    <div className='flex w-full md:flex-row flex-col gap-5'>
+      <div className=' flex flex-grow-[3]'>
+        <Search reset={resetSearch} setReset={setResetSearch}/>
+      </div>
+      <div className='flex flex-row  flex-grow-[1] gap-5'>
+        <CategoryFilter reset={resetCategory} setReset={setResetCategory}/>
+
+
      
     
     <div className='hover:cursor-pointer'>
@@ -64,6 +76,8 @@ const Filters = ({ limit, searchParams }: { limit: number } & SearchParamProps) 
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        </div>
+        </div>
         </div>
 
         {/* Conditionally show success message */}

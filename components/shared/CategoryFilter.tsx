@@ -7,9 +7,10 @@ import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 
-const CategoryFilter = () => {
+const CategoryFilter = ({reset, setReset}: any) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [category, setCategory] = useState('');
   const router = useRouter();
   const [active, setActive] = useState<ICategory[]>([]);
   const searchParams = useSearchParams();
@@ -52,6 +53,8 @@ const CategoryFilter = () => {
   }, [categories, refineCategories]);
 
   const onSelectCategory = useCallback((category: string) => {
+    setCategory(category)
+    setReset(false);
     let newUrl = '';
 
     if (category && category !== 'All') {
@@ -76,8 +79,8 @@ const cachedActiveMap = useMemo(() => active.map((category) => (
 return (
   <>
     <div className={`${overlayVisible ? 'md:hidden block' : 'hidden'} absolute top-[100%] h-[1000%]  w-screen  z-40`}></div>
-    <div className="z-50">
-      <Select onValueChange={onSelectCategory} onOpenChange={toggleOverlayVisible}>
+    <div className="z-50 flex w-full ">
+      <Select onValueChange={onSelectCategory} onOpenChange={toggleOverlayVisible} value={reset ? 'All' : category}>
         <SelectTrigger className="select-field" onClick={toggleOverlayVisible}>
           <SelectValue placeholder="Category" />
         </SelectTrigger>
