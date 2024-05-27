@@ -1,7 +1,7 @@
 'use client'
 import { useSearchParams } from "next/navigation"
 type PaginationProps = {
-    totalPages: number,
+    totalPages?: number,
   }
 const Pagecount = ({ totalPages }: PaginationProps) => {
     const searchParams = useSearchParams()

@@ -71,6 +71,7 @@ export async function getAllEvents({ query, limit = 6, page, category }: GetAllE
       .sort({ createdAt: 'desc' })
       .skip(skipAmount)
       .limit(limit)
+      
 
     const events = await populateEvent(eventsQuery)
     const eventsCount = await Event.countDocuments(conditions)
